@@ -27,12 +27,13 @@ $_SESSION['pseudo'] = 'Jean';
     -->
 
     <form action="minichat_post.php" method="post">
-        <p><label for="pseudo">Pseudo</label> : <input type="text" name="pseudo" id="pseudo" value="" required /></p>
+        <p><label for="pseudo">Pseudo</label> : <input type="text" name="pseudo" id="pseudo" value="" placeholder="pseudo" required /></p>
         <p><label for="message">Message</label> :  <input type="text" name="message" id="message" required/></p>
 
         <input type="submit" value="Envoyer" />
     </p>
     </form>
+
 
        
     <?php
@@ -49,26 +50,35 @@ $_SESSION['pseudo'] = 'Jean';
 
 
 
-	 <script>
-    	var pseudoElt = document.getElementById("pseudo");
-    	pseudoElt.value = "valeur"; 
 
-    </script>
 
 
     <?php
     // Récupération des 10 derniers messages
     $reponse = $bdd->query('SELECT pseudo, message FROM minichat ORDER BY ID DESC LIMIT 0, 10');
 
+	$pseudo = "";
+
     // Affichage de chaque message (toutes les données sont protégées par htmlspecialchars)
     while ($donnees = $reponse->fetch())
     {
+		if ($pseudo == "") 
+		{
+			$pseudo = $donnees['pseudo'];
+		}
+
         echo '<p><strong>' . htmlspecialchars($donnees['pseudo']) . '</strong> : ' . htmlspecialchars($donnees['message']) . '</p>';
 
     }
-
     
 
+  	echo '<script>';
+    echo 'var pseudoElt = document.getElementById("pseudo");';
+    echo 'pseudoElt.value = "'. $pseudo.'";'; 
+    echo '</script>';
+
+    
+    
 
     $reponse->closeCursor();
 
